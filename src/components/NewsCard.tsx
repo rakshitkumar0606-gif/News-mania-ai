@@ -76,11 +76,13 @@ export function NewsCard({ article, index = 0, translation }: Props) {
               className="h-full w-full object-cover transition-smooth group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-gradient-hero">
-              <span className="text-3xl font-display font-bold text-gradient">N</span>
+            <div className="flex h-full items-center justify-center bg-gradient-hero p-6 text-center">
+              <span className="text-2xl sm:text-3xl font-display font-bold">
+                News<span className="text-gradient">Mania</span>
+              </span>
             </div>
           )}
-          <Badge className="absolute left-3 top-3 bg-background/90 backdrop-blur text-foreground border-0 font-medium">
+          <Badge className="absolute start-3 top-3 bg-background/90 backdrop-blur text-foreground border-0 font-medium">
             {article.source.name}
           </Badge>
         </div>

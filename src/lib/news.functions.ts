@@ -1,32 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { NewsArticle, NewsCategory, Language } from "./news-types";
 
-// NewsAPI key (hardcoded per user request).
-// NOTE: NewsAPI's free/developer tier only allows requests from localhost/dev environments.
-// Production deployments will receive 426 errors unless upgraded to a paid plan.
-const NEWS_API_KEY = "3f652a5b2c82400689eabe41eaa799e3";
-const NEWS_API_BASE = "https://newsapi.org/v2";
-
-interface NewsAPIResponse {
-  status: string;
-  totalResults: number;
-  articles: Array<{
-    source: { id: string | null; name: string };
-    author: string | null;
-    title: string;
-    description: string | null;
-    url: string;
-    urlToImage: string | null;
-    publishedAt: string;
-    content: string | null;
-  }>;
-  code?: string;
-  message?: string;
-}
+const NEWS_API_KEY = "pub_901f5a3a2138421a8b459b2eeb7b96a5";
+const NEWS_API_BASE = "https://newsdata.io/api/1/latest";
 
 function mapLang(lang: Language): string {
-  // NewsAPI supports: ar de en es fr he it nl no pt ru sv ud zh
-  // Hindi/Marathi aren't supported — fall back to English and rely on AI translation.
   if (lang === "hi" || lang === "mr") return "en";
   return lang;
 }
@@ -36,65 +14,64 @@ interface FetchInput {
   query?: string;
   language?: Language;
   page?: number;
+  pageToken?: string | null;
   pageSize?: number;
   country?: string;
 }
 
 export const fetchNews = createServerFn({ method: "POST" })
   .inputValidator((d: FetchInput) => d)
-  .handler(async ({ data }): Promise<{ articles: NewsArticle[]; total: number; error?: string }> => {
+  .handler(async ({ data }): Promise<{ articles: NewsArticle[]; total: number; error?: string; nextPage?: string }> => {
     const lang = mapLang(data.language ?? "en");
-    const page = Math.max(1, data.page ?? 1);
-    const pageSize = Math.min(20, data.pageSize ?? 12);
 
     try {
-      let url: string;
+      const params = new URLSearchParams({
+        apikey: NEWS_API_KEY,
+        language: lang,
+      });
+
       if (data.query && data.query.trim()) {
-        const params = new URLSearchParams({
-          q: data.query.trim(),
-          language: lang,
-          pageSize: String(pageSize),
-          page: String(page),
-          sortBy: "publishedAt",
-          apiKey: NEWS_API_KEY,
-        });
-        url = `${NEWS_API_BASE}/everything?${params}`;
+        params.set("q", data.query.trim());
       } else {
-        const params = new URLSearchParams({
-          pageSize: String(pageSize),
-          page: String(page),
-          apiKey: NEWS_API_KEY,
-        });
         const cat = data.category ?? "general";
-        params.set("category", cat);
+        if (cat !== "general") {
+          // newsdata.io categories: business, entertainment, environment, food, health, politics, science, sports, technology, top, world, tourism
+          params.set("category", cat);
+        }
         params.set("country", data.country ?? "us");
-        url = `${NEWS_API_BASE}/top-headlines?${params}`;
       }
+
+      if (data.pageToken) {
+        params.set("page", data.pageToken);
+      }
+
+      const url = `${NEWS_API_BASE}?${params}`;
 
       const res = await fetch(url, {
         headers: { "User-Agent": "NewsManiaAI/1.0" },
       });
-      const json = (await res.json()) as NewsAPIResponse;
+      const json = await res.json() as any;
 
-      if (!res.ok || json.status !== "ok") {
-        console.error("NewsAPI error", res.status, json);
-        const msg = json.message ?? `News service error (${res.status}).`;
+      if (!res.ok || json.status !== "success") {
+        console.error("NewsData API error", res.status, json);
+        const msg = json.resultsMessage ?? `News service error (${res.status}).`;
         return { articles: [], total: 0, error: msg };
       }
 
       return {
-        articles: json.articles
-          .filter((a) => a.title && a.title !== "[Removed]")
-          .map((a) => ({
-            url: a.url,
+        articles: (json.results || [])
+          .filter((a: any) => a.title)
+          .map((a: any) => ({
+            url: a.link,
             title: a.title,
             description: a.description,
-            image: a.urlToImage,
-            publishedAt: a.publishedAt,
-            source: { name: a.source.name, url: a.url },
-            content: a.content,
+            image: a.image_url,
+            publishedAt: a.pubDate,
+            source: { name: a.source_id || a.source_name || "News", url: a.link },
+            content: a.content && a.content !== "ONLY AVAILABLE IN PAID PLANS" ? a.content : null,
           })),
-        total: json.totalResults,
+        total: json.totalResults || 0,
+        nextPage: json.nextPage,
       };
     } catch (err) {
       console.error("fetchNews failed", err);

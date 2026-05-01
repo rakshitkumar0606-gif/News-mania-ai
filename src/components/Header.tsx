@@ -33,7 +33,19 @@ export function Header() {
     <>
       <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-nav backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2 shrink-0 group">
+          <Link
+            to="/"
+            search={{ category: "general" }}
+            className="flex items-center gap-2 shrink-0 group"
+            onClick={(e) => {
+              const qs = new URLSearchParams(window.location.search);
+              const isLatest = path === "/" && (qs.get("category") === "general" || !qs.has("category")) && !qs.has("q");
+              if (isLatest) {
+                e.preventDefault();
+                window.location.reload();
+              }
+            }}
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-brand shadow-glow group-hover:scale-110 group-hover:rotate-3 transition-smooth">
               <Newspaper className="h-5 w-5 text-brand-foreground" />
             </div>
@@ -85,7 +97,7 @@ export function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem onClick={() => openSettings("profile")}>
-                    <UserIcon className="mr-2 h-4 w-4" /> Profile
+                    <UserIcon className="me-2 h-4 w-4" /> Profile
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -96,7 +108,7 @@ export function Header() {
                       }
                     }}
                   >
-                    <LogOut className="mr-2 h-4 w-4" /> {t.signOut}
+                    <LogOut className="me-2 h-4 w-4" /> {t.signOut}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -104,10 +116,10 @@ export function Header() {
               <Button
                 variant="default"
                 size="sm"
-                className="ml-1 bg-gradient-brand text-brand-foreground hover:opacity-90"
+                className="ms-1 bg-gradient-brand text-brand-foreground hover:opacity-90"
                 onClick={() => navigate({ to: "/auth", search: { tab: "signin" } })}
               >
-                <LogIn className="mr-1.5 h-4 w-4" />
+                <LogIn className="me-1.5 h-4 w-4" />
                 <span className="hidden sm:inline">{t.signIn}</span>
               </Button>
             )}

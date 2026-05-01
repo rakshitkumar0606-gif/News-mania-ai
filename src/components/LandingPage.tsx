@@ -53,7 +53,7 @@ export function LandingPage() {
             <Link to="/auth" search={{ tab: 'signup' }} className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-lg bg-gradient-brand text-brand-foreground shadow-glow group">
                 Create Free Account
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ms-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link to="/auth" search={{ tab: 'signin' }} className="w-full sm:w-auto">

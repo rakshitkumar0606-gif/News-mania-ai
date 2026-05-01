@@ -29,7 +29,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setLanguageState(l);
     document.documentElement.classList.toggle("dark", t === "dark");
     document.documentElement.lang = l;
-    document.documentElement.dir = isRTL(l) ? "rtl" : "ltr";
+    document.documentElement.dir = "ltr";
   }, []);
 
   const setTheme = (t: Theme) => {
@@ -42,7 +42,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setLanguageState(l);
     localStorage.setItem(LANG_KEY, l);
     document.documentElement.lang = l;
-    document.documentElement.dir = isRTL(l) ? "rtl" : "ltr";
+    document.documentElement.dir = "ltr";
   };
 
   const t = useMemo(() => getStrings(language), [language]);

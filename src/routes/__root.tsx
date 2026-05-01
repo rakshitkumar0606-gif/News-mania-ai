@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth-context";
 import { SettingsProvider } from "@/lib/settings-context";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 
@@ -40,9 +41,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { property: "og:title", content: "NewsMania AI — Smart Multilingual News" },
       { property: "og:description", content: "Real-time news with AI summaries and multilingual translations." },
       { property: "og:type", content: "website" },
+      { name: "theme-color", content: "#ffffff" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/icon.svg" },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -73,6 +77,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      import("virtual:pwa-register").then(({ registerSW }) => {
+        registerSW({ immediate: true });
+      }).catch(console.error);
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

@@ -20,7 +20,7 @@ const PAGE_SIZE = 10;
 export function NewsFeed({ category, query }: Props) {
   const { language, t } = useSettings();
   const [pages, setPages] = useState<NewsArticle[][]>([]);
-  const [page, setPage] = useState(1);
+  const [nextPage, setNextPage] = useState<string | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [reachedEnd, setReachedEnd] = useState(false);
   const [translations, setTranslations] = useState<Record<string, { title: string; description: string | null }>>({});
@@ -29,7 +29,7 @@ export function NewsFeed({ category, query }: Props) {
   // Reset on filter change
   useEffect(() => {
     setPages([]);
-    setPage(1);
+    setNextPage(null);
     setReachedEnd(false);
     setTranslations({});
   }, [category, query, language]);
@@ -38,7 +38,7 @@ export function NewsFeed({ category, query }: Props) {
     queryKey: ["news", category, query, language, "p1"],
     queryFn: () =>
       fetchNews({
-        data: { category, query, language, page: 1, pageSize: PAGE_SIZE },
+        data: { category, query, language, pageToken: null, pageSize: PAGE_SIZE },
       }),
     staleTime: 60_000,
   });
@@ -47,7 +47,8 @@ export function NewsFeed({ category, query }: Props) {
   useEffect(() => {
     if (initial.data && pages.length === 0) {
       setPages([initial.data.articles]);
-      if (initial.data.articles.length < PAGE_SIZE) setReachedEnd(true);
+      setNextPage(initial.data.nextPage || null);
+      if (initial.data.articles.length < PAGE_SIZE || !initial.data.nextPage) setReachedEnd(true);
     }
   }, [initial.data, pages.length]);
 
@@ -72,11 +73,10 @@ export function NewsFeed({ category, query }: Props) {
   }, [pages, language, translations]);
 
   const loadMore = useCallback(async () => {
-    if (loadingMore || reachedEnd) return;
+    if (loadingMore || reachedEnd || !nextPage) return;
     setLoadingMore(true);
-    const next = page + 1;
     const res = await fetchNews({
-      data: { category, query, language, page: next, pageSize: PAGE_SIZE },
+      data: { category, query, language, pageToken: nextPage, pageSize: PAGE_SIZE },
     });
     setLoadingMore(false);
     if (res.error) {
@@ -89,9 +89,9 @@ export function NewsFeed({ category, query }: Props) {
       return;
     }
     setPages((p) => [...p, res.articles]);
-    setPage(next);
-    if (res.articles.length < PAGE_SIZE) setReachedEnd(true);
-  }, [page, category, query, language, loadingMore, reachedEnd]);
+    setNextPage(res.nextPage || null);
+    if (res.articles.length < PAGE_SIZE || !res.nextPage) setReachedEnd(true);
+  }, [nextPage, category, query, language, loadingMore, reachedEnd]);
 
   // Infinite scroll
   useEffect(() => {

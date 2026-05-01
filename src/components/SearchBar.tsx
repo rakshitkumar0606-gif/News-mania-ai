@@ -87,14 +87,14 @@ export function SearchBar() {
       }}
       className="relative w-full"
     >
-      <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <Search className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={t.searchPlaceholder}
-        className="h-11 pl-10 pr-20 rounded-full border-border/70 bg-muted/40 focus-visible:bg-background transition-smooth"
+        className="h-11 ps-10 pe-20 rounded-full border-border/70 bg-muted/40 focus-visible:bg-background transition-smooth"
       />
-      <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+      <div className="absolute end-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
         {showClear && (
           <Button
             type="button"

@@ -93,10 +93,7 @@ function AuthPage() {
     <div className="h-screen flex flex-col lg:flex-row bg-animated-mesh overflow-hidden">
       {/* Left Side: Animation & Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 overflow-hidden border-r border-border/40">
-        <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-brand/20 blur-[100px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-accent/20 blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
+
 
         <div className="max-w-md w-full text-center space-y-12 relative z-10">
           <div className="flex flex-col items-center gap-6">
@@ -123,7 +120,7 @@ function AuthPage() {
               <p className="text-sm font-medium">AI Summaries</p>
             </div>
             <div className="p-6 rounded-2xl bg-card/40 border border-border/50 backdrop-blur-md">
-              <Globe className="h-8 w-8 text-accent mb-4 mx-auto" />
+              <Globe className="h-8 w-8 text-brand mb-4 mx-auto animate-pulse" />
               <p className="text-sm font-medium">10+ Languages</p>
             </div>
           </div>
@@ -132,9 +129,12 @@ function AuthPage() {
 
       {/* Right Side: Auth Form */}
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 relative">
+        {/* Background glows behind the login form */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand/20 rounded-full blur-[120px] animate-pulse pointer-events-none -z-10" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-brand/30 rounded-full blur-[100px] animate-pulse pointer-events-none -z-10" style={{ animationDelay: '2s' }} />
         {/* Mobile Logo */}
         <div className="lg:hidden absolute top-8 left-0 w-full flex justify-center">
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" search={{ category: "general" }} className="flex items-center gap-2 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-brand shadow-glow">
               <Newspaper className="h-5 w-5 text-brand-foreground" />
             </div>
@@ -146,7 +146,7 @@ function AuthPage() {
 
         <div className="w-full max-w-md animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <Card className="p-6 sm:p-8 shadow-card-lg bg-gradient-card border-border/50 backdrop-blur-xl">
-            <div className="mb-6 text-center lg:text-left">
+            <div className="mb-6 text-center lg:text-start">
               <h2 className="text-xl font-bold tracking-tight mb-1">
                 {tab === 'signin' ? t.signInTab : t.createAccountTab}
               </h2>
@@ -164,11 +164,11 @@ function AuthPage() {
               <TabsContent value="signin" className="mt-0 outline-none animate-fade-in">
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="signin-email" className="text-xs font-medium ml-1">{t.email}</Label>
+                    <Label htmlFor="signin-email" className="text-xs font-medium ms-1">{t.email}</Label>
                     <Input id="signin-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="h-10 bg-background/50" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="signin-password" className="text-xs font-medium ml-1">{t.password}</Label>
+                    <Label htmlFor="signin-password" className="text-xs font-medium ms-1">{t.password}</Label>
                     <Input id="signin-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="h-10 bg-background/50" />
                   </div>
                   <Button type="submit" className="w-full h-11 bg-gradient-brand text-brand-foreground hover:opacity-90 shadow-glow" disabled={loading}>
@@ -181,32 +181,32 @@ function AuthPage() {
                 <form onSubmit={handleSignUp} className="space-y-2">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <Label htmlFor="signup-username" className="text-[10px] font-medium ml-1 uppercase text-muted-foreground">{t.username}</Label>
+                      <Label htmlFor="signup-username" className="text-[10px] font-medium ms-1 uppercase text-muted-foreground">{t.username}</Label>
                       <Input id="signup-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="name" className="h-9 bg-background/50" />
                     </div>
                     <div className="space-y-1">
-                      <Label htmlFor="signup-fullname" className="text-[10px] font-medium ml-1 uppercase text-muted-foreground">Full Name</Label>
+                      <Label htmlFor="signup-fullname" className="text-[10px] font-medium ms-1 uppercase text-muted-foreground">Full Name</Label>
                       <Input id="signup-fullname" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" className="h-9 bg-background/50" />
                     </div>
                   </div>
                   
                   <div className="space-y-1">
-                    <Label htmlFor="signup-email" className="text-[10px] font-medium ml-1 uppercase text-muted-foreground">{t.email}</Label>
+                    <Label htmlFor="signup-email" className="text-[10px] font-medium ms-1 uppercase text-muted-foreground">{t.email}</Label>
                     <Input id="signup-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="h-9 bg-background/50" />
                   </div>
                   
                   <div className="space-y-1">
-                    <Label htmlFor="signup-phone" className="text-[10px] font-medium ml-1 uppercase text-muted-foreground">Phone Number</Label>
+                    <Label htmlFor="signup-phone" className="text-[10px] font-medium ms-1 uppercase text-muted-foreground">Phone Number</Label>
                     <Input id="signup-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 234..." className="h-9 bg-background/50" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <Label htmlFor="signup-password" className="text-[10px] font-medium ml-1 uppercase text-muted-foreground">{t.password}</Label>
+                      <Label htmlFor="signup-password" className="text-[10px] font-medium ms-1 uppercase text-muted-foreground">{t.password}</Label>
                       <Input id="signup-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••" className="h-9 bg-background/50" />
                     </div>
                     <div className="space-y-1">
-                      <Label htmlFor="signup-confirm" className="text-[10px] font-medium ml-1 uppercase text-muted-foreground">Confirm</Label>
+                      <Label htmlFor="signup-confirm" className="text-[10px] font-medium ms-1 uppercase text-muted-foreground">Confirm</Label>
                       <Input id="signup-confirm" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••" className="h-9 bg-background/50" />
                     </div>
                   </div>

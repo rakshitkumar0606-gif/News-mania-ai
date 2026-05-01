@@ -166,7 +166,7 @@ export function SettingsDialog({
                       <button 
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
-                        className="absolute bottom-0 right-0 p-2 rounded-full bg-brand text-brand-foreground shadow-lg hover:scale-105 transition-smooth disabled:opacity-50 animate-in zoom-in"
+                        className="absolute bottom-0 end-0 p-2 rounded-full bg-brand text-brand-foreground shadow-lg hover:scale-105 transition-smooth disabled:opacity-50 animate-in zoom-in"
                       >
                         {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                       </button>
@@ -192,7 +192,7 @@ export function SettingsDialog({
                     <div className="space-y-4 animate-fade-in">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="username" className="text-xs font-medium ml-1">Username</Label>
+                          <Label htmlFor="username" className="text-xs font-medium ms-1">Username</Label>
                           <Input 
                             id="username" 
                             value={profile.username} 
@@ -201,7 +201,7 @@ export function SettingsDialog({
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="full_name" className="text-xs font-medium ml-1">Full Name</Label>
+                          <Label htmlFor="full_name" className="text-xs font-medium ms-1">Full Name</Label>
                           <Input 
                             id="full_name" 
                             value={profile.full_name} 
@@ -212,7 +212,7 @@ export function SettingsDialog({
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-xs font-medium ml-1">Phone Number</Label>
+                        <Label htmlFor="phone" className="text-xs font-medium ms-1">Phone Number</Label>
                         <Input 
                           id="phone" 
                           value={profile.phone} 
@@ -227,7 +227,7 @@ export function SettingsDialog({
                           onClick={updateProfile}
                           disabled={loading}
                         >
-                          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          {loading && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
                           Save Changes
                         </Button>
                         <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
@@ -237,13 +237,13 @@ export function SettingsDialog({
                     <div className="space-y-4 animate-fade-in">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label className="text-xs text-muted-foreground uppercase tracking-wider ml-1">Username</Label>
+                          <Label className="text-xs text-muted-foreground uppercase tracking-wider ms-1">Username</Label>
                           <div className="h-12 flex items-center px-4 bg-muted/40 rounded-xl border border-border/50 font-medium">
                             {profile.username || "Not set"}
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-xs text-muted-foreground uppercase tracking-wider ml-1">Full Name</Label>
+                          <Label className="text-xs text-muted-foreground uppercase tracking-wider ms-1">Full Name</Label>
                           <div className="h-12 flex items-center px-4 bg-muted/40 rounded-xl border border-border/50 font-medium">
                             {profile.full_name || "Not set"}
                           </div>
@@ -251,14 +251,14 @@ export function SettingsDialog({
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground uppercase tracking-wider ml-1">Email Address</Label>
+                        <Label className="text-xs text-muted-foreground uppercase tracking-wider ms-1">Email Address</Label>
                         <div className="h-12 flex items-center px-4 bg-muted/40 rounded-xl border border-border/50 font-medium">
                           {user.email}
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground uppercase tracking-wider ml-1">Phone Number</Label>
+                        <Label className="text-xs text-muted-foreground uppercase tracking-wider ms-1">Phone Number</Label>
                         <div className="h-12 flex items-center px-4 bg-muted/40 rounded-xl border border-border/50 font-medium">
                           {profile.phone || "Not set"}
                         </div>
@@ -297,7 +297,7 @@ export function SettingsDialog({
                       className={`rounded-md px-4 ${theme === "light" ? "bg-background shadow-sm text-brand" : "text-muted-foreground"}`}
                       onClick={() => setTheme("light")}
                     >
-                      <Sun className="mr-2 h-4 w-4" /> {t.light}
+                      <Sun className="me-2 h-4 w-4" /> {t.light}
                     </Button>
                     <Button
                       type="button"
@@ -306,7 +306,7 @@ export function SettingsDialog({
                       className={`rounded-md px-4 ${theme === "dark" ? "bg-background shadow-sm text-brand" : "text-muted-foreground"}`}
                       onClick={() => setTheme("dark")}
                     >
-                      <Moon className="mr-2 h-4 w-4" /> {t.dark}
+                      <Moon className="me-2 h-4 w-4" /> {t.dark}
                     </Button>
                   </div>
                 </div>
@@ -325,7 +325,7 @@ export function SettingsDialog({
                           key={l.value}
                           onClick={() => setLanguage(l.value as Language)}
                           className={cn(
-                            "flex flex-col items-start p-3 rounded-xl border-2 text-left transition-smooth hover-lift",
+                            "flex flex-col items-start p-3 rounded-xl border-2 text-start transition-smooth hover-lift",
                             isActive 
                               ? "border-brand bg-brand/5 shadow-sm" 
                               : "border-border/50 bg-muted/30 hover:border-brand/30"
